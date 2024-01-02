@@ -1,0 +1,3 @@
+GO_ENV = "dev"
+PORT = "3000"
+MYSQL_URL = "user:pass@tcp(host:port)/db?charset=utf8mb4&parseTime=True&loc=Local"

@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  goapp:
+    container_name: goapp
+    # network_mode: host
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    # env_file:
+    #   - .env
+    restart: unless-stopped
+    ports:
+      - "3002:3001"
+    environment:
+      - GO_ENV=dev
+      - PORT=3001
+      - MYSQL_URL=root:@tcp(host.docker.internal:3306)/go_clean_arch?charset=utf8mb4&parseTime=True&loc=Local
+    
