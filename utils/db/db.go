@@ -24,6 +24,10 @@ func DbConn() *gorm.DB {
 		return nil
 	}
 
+	if os.Getenv(env.GO_ENV) == "dev" {
+		return db.Debug()
+	}
+
 	return db
 }
 
@@ -39,7 +43,9 @@ func DbMock() (*gorm.DB, sqlmock.Sqlmock) {
 	gormDB, err := gorm.Open(mysql.New(mysql.Config{
 		Conn:                      db,
 		SkipInitializeWithVersion: true,
-	}), &gorm.Config{})
+	}), &gorm.Config{
+		CreateBatchSize: 3,
+	})
 
 	if err != nil {
 		log.Fatalf("An error '%s' was not expected when opening gorm database", err)
@@ -51,6 +57,7 @@ func DbMock() (*gorm.DB, sqlmock.Sqlmock) {
 func DbInit() {
 	conn := DbConn()
 
+	conn.AutoMigrate(domain.Category{})
 	conn.AutoMigrate(domain.User{})
 	conn.AutoMigrate(domain.Cat{})
 }

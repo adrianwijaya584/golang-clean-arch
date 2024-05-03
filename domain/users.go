@@ -8,10 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type Tabler interface {
-	TableName() string
-}
-
 type User struct {
 	ID   string `gorm:"primaryKey;size:40"`
 	Name string `json:"name" gorm:"column:name;size:40"`

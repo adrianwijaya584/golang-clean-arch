@@ -2,7 +2,6 @@ package statuscode
 
 import (
 	"clean_arch/domain"
-	"log"
 	"net/http"
 )
 
@@ -14,8 +13,6 @@ func (ut StatusCodeUtils) GetStatusCode(err error) int {
 	if err == nil {
 		return http.StatusOK
 	}
-
-	log.Println(ut.DeliveryMsg, err.Error())
 
 	switch err {
 	case domain.ErrInternalServerError:

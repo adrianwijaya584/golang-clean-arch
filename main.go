@@ -1,15 +1,20 @@
 package main
 
 import (
-	"clean_arch/src/cats/delivery"
-	"clean_arch/src/cats/repository"
-	"clean_arch/src/cats/usecase"
+	categoryDelivery "clean_arch/src/categories/delivery"
+	categoryRepo "clean_arch/src/categories/repository"
+	categoryUseCase "clean_arch/src/categories/usecase"
+	catDelivery "clean_arch/src/cats/delivery"
+	catRepository "clean_arch/src/cats/repository"
+	catUseCase "clean_arch/src/cats/usecase"
 	userDelivery "clean_arch/src/user/delivery"
 	userRepo "clean_arch/src/user/repository"
 	userUseCase "clean_arch/src/user/usecase"
 	customvalidator "clean_arch/utils/custom_validator"
 	"clean_arch/utils/db"
 	"clean_arch/utils/env"
+	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/go-playground/validator/v10"
@@ -34,19 +39,25 @@ func main() {
 		),
 	}
 
-	dbConn := db.DbConn()
+	app.RouteNotFound("/*", func(c echo.Context) error {
+		return c.JSON(http.StatusNotFound, echo.Map{
+			"error": fmt.Sprintf("[%s] %s is not found", c.Request().Method, c.Request().RequestURI),
+		})
+	})
 
-	if os.Getenv(env.GO_ENV) == "dev" {
-		dbConn = dbConn.Debug()
-	}
+	dbConn := db.DbConn()
 
 	userRepo := userRepo.NewUserRepo(dbConn)
 	userUCase := userUseCase.NewUserUseCase(userRepo)
 	userDelivery.NewUsersHandler(app, userUCase)
 
-	catRepo := repository.NewCatRepo()
-	catUCase := usecase.NewCatUseCase(catRepo)
-	delivery.NewCatDelivery(app, catUCase)
+	catRepo := catRepository.NewCatRepo()
+	catUCase := catUseCase.NewCatUseCase(catRepo)
+	catDelivery.NewCatDelivery(app, catUCase)
+
+	categoryRepo := categoryRepo.CategoryRepository(dbConn)
+	categoryUseCase := categoryUseCase.CategoryUseCase(categoryRepo)
+	categoryDelivery.CategoryDelivery(app, categoryUseCase)
 
 	app.Start(":" + os.Getenv(env.PORT))
 }
