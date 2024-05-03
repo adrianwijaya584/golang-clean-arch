@@ -12,8 +12,8 @@ services:
     image: goapp
     deploy:
       replicas: 2
-    # env_file:
-    #   - .env
+    env_file:
+      - .env
     restart: unless-stopped
     ports:
       - "3002-3005:3001"

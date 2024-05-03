@@ -15,7 +15,7 @@ func CategoryUseCase(categoryRepository domain.CategoryRepository) domain.Catego
 }
 
 // GetAll implements domain.CategoryUseCase.
-func (usecase *categoryUseCase) GetAll() ([]domain.Category, error) {
+func (usecase *categoryUseCase) GetAll() ([]domain.GetCategory, error) {
 	categories, err := usecase.categoryRepository.GetAll()
 
 	return categories, err

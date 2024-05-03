@@ -1,9 +1,16 @@
 package main
 
 import (
-	categoryDelivery "clean_arch/src/categories/delivery"
-	categoryRepo "clean_arch/src/categories/repository"
-	categoryUseCase "clean_arch/src/categories/usecase"
+	"fmt"
+	"net/http"
+	"os"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+
+	"clean_arch/src/categories"
 	catDelivery "clean_arch/src/cats/delivery"
 	catRepository "clean_arch/src/cats/repository"
 	catUseCase "clean_arch/src/cats/usecase"
@@ -13,14 +20,6 @@ import (
 	customvalidator "clean_arch/utils/custom_validator"
 	"clean_arch/utils/db"
 	"clean_arch/utils/env"
-	"fmt"
-	"net/http"
-	"os"
-
-	"github.com/go-playground/validator/v10"
-	"github.com/joho/godotenv"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -55,9 +54,7 @@ func main() {
 	catUCase := catUseCase.NewCatUseCase(catRepo)
 	catDelivery.NewCatDelivery(app, catUCase)
 
-	categoryRepo := categoryRepo.CategoryRepository(dbConn)
-	categoryUseCase := categoryUseCase.CategoryUseCase(categoryRepo)
-	categoryDelivery.CategoryDelivery(app, categoryUseCase)
+	categories.CategoriesModuleInit(dbConn, app)
 
 	app.Start(":" + os.Getenv(env.PORT))
 }

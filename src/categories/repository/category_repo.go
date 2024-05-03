@@ -1,10 +1,10 @@
 package repository
 
 import (
+	"gorm.io/gorm"
+
 	"clean_arch/domain"
 	tablenames "clean_arch/utils/table_names"
-
-	"gorm.io/gorm"
 )
 
 type categoryRepo struct {
@@ -17,10 +17,10 @@ func CategoryRepository(db *gorm.DB) domain.CategoryRepository {
 	}
 }
 
-func (util *categoryRepo) GetAll() ([]domain.Category, error) {
-	categories := []domain.Category{}
+func (util *categoryRepo) GetAll() ([]domain.GetCategory, error) {
+	categories := []domain.GetCategory{}
 
-	err := util.db.Scan(&categories).Error
+	err := util.db.Select("id", "name").Scan(&categories).Error
 
 	if err != nil {
 		return nil, err

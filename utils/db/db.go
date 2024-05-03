@@ -1,14 +1,15 @@
 package db
 
 import (
-	"clean_arch/domain"
-	"clean_arch/utils/env"
 	"os"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/labstack/gommon/log"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+
+	"clean_arch/domain"
+	"clean_arch/utils/env"
 )
 
 func DbConn() *gorm.DB {
@@ -25,7 +26,7 @@ func DbConn() *gorm.DB {
 	}
 
 	if os.Getenv(env.GO_ENV) == "dev" {
-		return db.Debug()
+		db = db.Debug()
 	}
 
 	return db
